@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TrustPositif Checker</title>
+    <meta
+      name="description"
+      content="Check domains against the TrustPositif blacklist with this modern, responsive tool"
+    />
+
+    <!-- Google Font: Lexend -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235A67D8'%3E%3Cpath d='M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11v6h2v-6h-2zm0-4v2h2V7h-2z'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <header>
+        <div class="logo-container">
+          <div class="logo">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11v6h2v-6h-2zm0-4v2h2V7h-2z"
+              />
+            </svg>
+          </div>
+          <h1>TrustPositif</h1>
+        </div>
+        <div class="theme-toggle">
+          <button id="theme-toggle-btn" aria-label="Toggle dark/light mode">
+            <svg
+              id="moon-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"
+              />
+            </svg>
+            <svg
+              id="sun-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"
+              />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="intro">
+          <h2>Domain Checker</h2>
+          <p>
+            Check if a domain is included in the TrustPositif blacklist. Our
+            system uses a modern Bloom Filter implementation for
+            high-performance lookups.
+          </p>
+        </section>
+
+        <section class="search-container">
+          <form id="domain-form" class="domain-form">
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="domain-input"
+                name="domain"
+                placeholder="Enter a domain (e.g., example.com)"
+                autocomplete="off"
+                required
+              />
+              <button type="submit" class="check-button">
+                <span>Check</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M23.384,21.619,16.855,15.09a9.284,9.284,0,1,0-1.768,1.768l6.529,6.529a1.266,1.266,0,0,0,1.768,0A1.251,1.251,0,0,0,23.384,21.619ZM2.75,9.5a6.75,6.75,0,1,1,6.75,6.75A6.758,6.758,0,0,1,2.75,9.5Z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </form>
+
+          <div id="result-container" class="result-container hidden">
+            <div class="result-card">
+              <div class="result-header">
+                <h3 id="result-domain">domain.com</h3>
+                <span id="result-timestamp" class="timestamp"
+                  >2025-04-08 08:13:35</span
+                >
+              </div>
+              <div id="result-status" class="result-status">
+                <!-- Status will be injected here by JavaScript -->
+              </div>
+            </div>
+          </div>
+
+          <div id="error-container" class="error-container hidden">
+            <div class="error-card">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z"
+                />
+              </svg>
+              <p id="error-message">Something went wrong</p>
+              <button id="dismiss-error" class="dismiss-button">Dismiss</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="api-stats">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M13 9h8L11 24v-9H4l9-15v9z" />
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h4>Rate Limit</h4>
+              <p>60 requests per minute</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11v6h2v-6h-2zm0-4v2h2V7h-2z"
+                />
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h4>API Status</h4>
+              <p id="api-status">Checking...</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z M11 6h2v8h-2z M11 16h2v2h-2z"
+                />
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h4>Remaining Quota</h4>
+              <p id="remaining-quota">60/60</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="recent-checks">
+          <h3>Recent Checks</h3>
+          <div id="recent-checks-list" class="recent-checks-list">
+            <p class="no-history">No recent checks yet.</p>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="footer-content">
+          <p>TrustPositif Domain Checker &copy; 2025</p>
+          <div class="footer-links">
+            <a
+              href="https://github.com/galangw/trustpositif-api"
+              target="_blank"
+              rel="noopener noreferrer"
+              >GitHub</a
+            >
+            <a href="https://github.com/galangw" id="about-link">About</a>
+          </div>
+        </div>
+      </footer>
+
+      <!-- Modal -->
+      <div id="about-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>About TrustPositif Checker</h3>
+            <button id="close-modal" class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p>
+              This tool allows you to check if a domain is included in the
+              TrustPositif blacklist.
+            </p>
+            <p>
+              The backend utilizes a sophisticated Bloom Filter implementation
+              for high-performance lookups across millions of domains.
+            </p>
+            <h4>Technical Details:</h4>
+            <ul>
+              <li>
+                API Endpoint:
+                <code>https://trustpositif.glng.my.id/check/{domain}</code>
+              </li>
+              <li>Rate Limit: 60 requests per minute per IP</li>
+              <li>
+                Response Format: JSON with domain, blocked status, and timestamp
+              </li>
+            </ul>
+            <p>
+              For more information, check out the
+              <a
+                href="https://github.com/username/trustpositif-checker"
+                target="_blank"
+                rel="noopener noreferrer"
+                >GitHub repository</a
+              >.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <!-- Main JavaScript -->
+    <script src="scripts.js"></script>
+  </body>
+</html>
